@@ -1,0 +1,137 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+}
+
+model Carwash {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  status        CarwashStatus @default(DRAFT)
+  featured      Boolean       @default(false)
+  title         String
+  description   String        @db.Text
+  type          String        // 'self_service' | 'automatic' | 'manual' | 'combined'
+  price         Decimal
+  currency      String        @default("RUB")
+  revenue       Decimal?
+  profit        Decimal?
+  paybackMonths Int?
+  businessAge   Int?
+  employees     Int?
+  posts         Int?          // количество постов мойки
+  area          Int?
+  leaseMonths   Int?
+  city          String
+  district      String?
+  address       String?
+  coverImage    String?
+  images        String[]
+  documents     String[]
+  withRealEstate Boolean      @default(false)
+  withEquipment  Boolean      @default(true)
+  urgent         Boolean      @default(false)
+  negotiable     Boolean      @default(true)
+  metaTitle      String?
+  metaDesc       String?
+  leads          Lead[]
+  views          Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+enum CarwashStatus {
+  DRAFT
+  ACTIVE
+  RESERVED
+  SOLD
+  ARCHIVED
+}
+
+model Lead {
+  id          String     @id @default(cuid())
+  type        LeadType
+  name        String
+  phone       String
+  email       String?
+  message     String?
+  source      String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  status      LeadStatus @default(NEW)
+  carwashId   String?
+  carwash     Carwash?   @relation(fields: [carwashId], references: [id])
+  createdAt   DateTime   @default(now())
+  notes       String?
+}
+
+enum LeadType {
+  BUY
+  SELL
+  VALUATION
+  GENERAL
+}
+
+enum LeadStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+model SiteSettings {
+  id          String  @id @default("main")
+  siteName    String  @default("Портал Автомоек")
+  phone       String?
+  email       String?
+  address     String?
+  whatsapp    String?
+  telegram    String?
+  heroTitle   String?
+  heroSubtitle String?
+  metaTitle   String?
+  metaDesc    String?
+  ogImage     String?
+}
+
+model BlogPost {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  excerpt     String
+  content     String     @db.Text
+  coverImage  String?
+  category    String?
+  tags        String[]
+  status      PageStatus @default(DRAFT)
+  publishedAt DateTime?
+  metaTitle   String?
+  metaDesc    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+}

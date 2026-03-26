@@ -1,11 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
-  content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -54,15 +50,6 @@ const config: Config = {
         heading: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono:    ['ui-monospace', 'SFMono-Regular', 'monospace'],
       },
-      fontSize: {
-        '2xs': ['10px', { lineHeight: '14px', letterSpacing: '0.06em' }],
-      },
-      letterSpacing: {
-        tighter: '-0.04em',
-        tight:   '-0.03em',
-        snug:    '-0.02em',
-        widest:  '0.12em',
-      },
       borderRadius: {
         DEFAULT: '2px',
         sm: '2px',
@@ -73,23 +60,20 @@ const config: Config = {
         full: '9999px',
       },
       boxShadow: {
-        sm:  'none',
+        sm: 'none',
         DEFAULT: 'none',
-        md:  'none',
-        lg:  'none',
-        xl:  'none',
-        '2xl': 'none',
+        md: 'none',
+        lg: 'none',
+        xl: 'none',
         inner: 'inset 0 1px 0 0 #E5E5E5',
       },
       animation: {
         'fade-in':  'fadeIn 0.5s ease both',
         'slide-up': 'slideUp 0.6s ease both',
-        'marquee':  'marquee 30s linear infinite',
       },
       keyframes: {
         fadeIn:  { from: { opacity: '0', transform: 'translateY(12px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
         slideUp: { from: { opacity: '0', transform: 'translateY(20px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
-        marquee: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
       },
     },
   },

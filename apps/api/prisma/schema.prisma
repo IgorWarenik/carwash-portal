@@ -24,39 +24,39 @@ enum Role {
 }
 
 model Carwash {
-  id            String        @id @default(cuid())
-  slug          String        @unique
-  status        CarwashStatus @default(DRAFT)
-  featured      Boolean       @default(false)
-  title         String
-  description   String        @db.Text
-  type          String        // 'self_service' | 'automatic' | 'manual' | 'combined'
-  price         Decimal
-  currency      String        @default("RUB")
-  revenue       Decimal?
-  profit        Decimal?
-  paybackMonths Int?
-  businessAge   Int?
-  employees     Int?
-  posts         Int?          // количество постов мойки
-  area          Int?
-  leaseMonths   Int?
-  city          String
-  district      String?
-  address       String?
-  coverImage    String?
-  images        String[]
-  documents     String[]
-  withRealEstate Boolean      @default(false)
-  withEquipment  Boolean      @default(true)
-  urgent         Boolean      @default(false)
-  negotiable     Boolean      @default(true)
+  id             String        @id @default(cuid())
+  slug           String        @unique
+  status         CarwashStatus @default(DRAFT)
+  featured       Boolean       @default(false)
+  title          String
+  description    String
+  type           String
+  price          Decimal
+  currency       String        @default("RUB")
+  revenue        Decimal?
+  profit         Decimal?
+  paybackMonths  Int?
+  businessAge    Int?
+  employees      Int?
+  posts          Int?
+  area           Int?
+  leaseMonths    Int?
+  city           String
+  district       String?
+  address        String?
+  coverImage     String?
+  images         String[]
+  documents      String[]
+  withRealEstate Boolean       @default(false)
+  withEquipment  Boolean       @default(true)
+  urgent         Boolean       @default(false)
+  negotiable     Boolean       @default(true)
   metaTitle      String?
   metaDesc       String?
   leads          Lead[]
-  views          Int          @default(0)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  views          Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 enum CarwashStatus {
@@ -100,18 +100,18 @@ enum LeadStatus {
 }
 
 model SiteSettings {
-  id          String  @id @default("main")
-  siteName    String  @default("Портал Автомоек")
-  phone       String?
-  email       String?
-  address     String?
-  whatsapp    String?
-  telegram    String?
-  heroTitle   String?
+  id           String  @id @default("main")
+  siteName     String  @default("Портал Автомоек")
+  phone        String?
+  email        String?
+  address      String?
+  whatsapp     String?
+  telegram     String?
+  heroTitle    String?
   heroSubtitle String?
-  metaTitle   String?
-  metaDesc    String?
-  ogImage     String?
+  metaTitle    String?
+  metaDesc     String?
+  ogImage      String?
 }
 
 model BlogPost {
@@ -119,7 +119,7 @@ model BlogPost {
   slug        String     @unique
   title       String
   excerpt     String
-  content     String     @db.Text
+  content     String
   coverImage  String?
   category    String?
   tags        String[]

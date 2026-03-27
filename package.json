@@ -1,16 +1,25 @@
 {
   "name": "carwash-portal",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
-    "build": "npm run build --workspace=apps/api && npm run build --workspace=apps/web",
-    "dev:api": "npm run dev --workspace=apps/api",
-    "dev:web": "npm run dev --workspace=apps/web",
-    "agents": "npm start --workspace=apps/agents --"
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "lint": "npm run lint --workspace=apps/web",
+    "typecheck": "npm run typecheck --workspace=apps/web",
+    "test": "vitest run",
+    "db:generate": "npm run db:generate --workspace=packages/db",
+    "db:migrate": "npm run db:migrate --workspace=packages/db",
+    "db:migrate:dev": "npm run db:migrate:dev --workspace=packages/db",
+    "db:seed": "npm run db:seed --workspace=packages/db",
+    "db:studio": "npm run db:studio --workspace=packages/db",
+    "db:validate": "npm run db:validate --workspace=packages/db",
+    "agents": "npm start --workspace=apps/agents --",
+    "validate:structured-data": "node scripts/validate-structured-data.mjs"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

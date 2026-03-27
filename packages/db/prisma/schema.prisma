@@ -1,0 +1,371 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ───────────────────────────────────────────────────────────────────
+
+enum CarWashType {
+  self_service
+  automatic
+  manual
+  detailing
+  truck
+}
+
+enum LeadType {
+  BUY
+  SELL
+  OPEN
+  SUPPLIER
+  FRANCHISE
+  GENERAL
+}
+
+enum ListingType {
+  BUY
+  SELL
+}
+
+enum LandStatus {
+  OWNED
+  LEASE
+  SUBLEASE
+}
+
+enum ContentStatus {
+  draft
+  pending_review
+  active
+  archived
+}
+
+enum DataSource {
+  manual
+  import
+  synthetic
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  MODERATOR
+}
+
+// ─── GEOGRAPHY ───────────────────────────────────────────────────────────────
+
+model City {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  region      String
+  population  Int?
+  lat         Float?
+  lng         Float?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  carwashes   CarWash[]
+  listings    BusinessListing[]
+  leads       Lead[]
+
+  @@index([slug])
+  @@index([isActive])
+}
+
+// ─── CARWASH DIRECTORY ────────────────────────────────────────────────────────
+
+model CarWash {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String       @unique
+  type          CarWashType
+  description   String?
+  shortDesc     String?
+
+  // Location
+  cityId        String
+  city          City         @relation(fields: [cityId], references: [id])
+  address       String
+  district      String?
+  lat           Float?
+  lng           Float?
+
+  // Contact
+  phone         String?
+  website       String?
+  email         String?
+
+  // Business
+  priceFrom     Int?
+  priceTo       Int?
+  posts         Int?
+  isOpen24h     Boolean      @default(false)
+  workingHours  String?
+
+  // Services (array stored as text array)
+  services      String[]
+
+  // Media
+  photos        String[]
+  logoUrl       String?
+
+  // Metrics
+  rating        Float?       @default(0)
+  reviewCount   Int          @default(0)
+  views         Int          @default(0)
+
+  // Commercial
+  featured      Boolean      @default(false)
+  isPremium     Boolean      @default(false)
+  premiumUntil  DateTime?
+
+  // Moderation / provenance
+  status        ContentStatus @default(pending_review)
+  source        DataSource    @default(manual)
+  sourceUrl     String?
+  importedAt    DateTime?
+  verifiedAt    DateTime?
+  verifiedBy    String?
+  lastCheckedAt DateTime?
+
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  reviews       Review[]
+  leads         Lead[]
+
+  @@index([cityId, type, status])
+  @@index([slug])
+  @@index([featured, status])
+  @@index([views])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  carwashId   String
+  carwash     CarWash  @relation(fields: [carwashId], references: [id])
+  authorName  String
+  rating      Int
+  text        String?
+  source      String?  // yandex_maps, google, manual
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([carwashId])
+}
+
+// ─── SUPPLIERS ───────────────────────────────────────────────────────────────
+
+model Supplier {
+  id            String        @id @default(cuid())
+  name          String
+  slug          String        @unique
+  description   String?
+  category      String        // equipment, chemistry, franchise, construction
+  city          String?
+  phone         String?
+  website       String?
+  email         String?
+  logoUrl       String?
+  photos        String[]
+  services      String[]
+  productTypes  String[]
+  priceRange    String?       // budget, mid, premium
+  featured      Boolean       @default(false)
+  status        ContentStatus @default(pending_review)
+  source        DataSource    @default(manual)
+  verifiedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  leads         Lead[]
+
+  @@index([category, status])
+  @@index([slug])
+}
+
+// ─── FRANCHISES ──────────────────────────────────────────────────────────────
+
+model Franchise {
+  id              String        @id @default(cuid())
+  name            String
+  slug            String        @unique
+  description     String?
+  investmentFrom  Int?
+  investmentTo    Int?
+  royalty         Float?        // %
+  lumpSum         Int?
+  paybackMonths   Int?
+  postsCount      String?       // "1-3", "4-6"
+  supportLevel    String?       // full, partial, minimal
+  logoUrl         String?
+  photos          String[]
+  featured        Boolean       @default(false)
+  status          ContentStatus @default(pending_review)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  leads           Lead[]
+
+  @@index([status])
+  @@index([slug])
+}
+
+// ─── BUSINESS LISTINGS ────────────────────────────────────────────────────────
+
+model BusinessListing {
+  id            String       @id @default(cuid())
+  title         String
+  slug          String       @unique
+  listingType   ListingType
+  description   String?
+  carwashType   CarWashType
+  cityId        String
+  city          City         @relation(fields: [cityId], references: [id])
+  address       String?
+  price         Int?
+  priceNegotiable Boolean   @default(false)
+  revenue       Int?         // monthly revenue
+  profit        Int?         // monthly profit
+  posts         Int?
+  landStatus    LandStatus?
+  equipmentAge  Int?         // years
+  photos        String[]
+  contactName   String?
+  contactPhone  String?
+  status        ContentStatus @default(pending_review)
+  source        DataSource    @default(manual)
+  verifiedAt    DateTime?
+  expiresAt     DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  leads         Lead[]
+
+  @@index([cityId, listingType, status])
+  @@index([slug])
+}
+
+// ─── LEADS ───────────────────────────────────────────────────────────────────
+
+model Lead {
+  id            String    @id @default(cuid())
+  leadType      LeadType
+  name          String?
+  phone         String?
+  email         String?
+  message       String?
+
+  // Attribution
+  utmSource     String?
+  utmMedium     String?
+  utmCampaign   String?
+  utmContent    String?
+  landingPage   String?
+  pageType      String?
+  city          String?
+  cityId        String?
+  cityRel       City?     @relation(fields: [cityId], references: [id])
+  category      String?
+  device        String?
+  referrer      String?
+
+  // Related entities
+  carwashId     String?
+  carwash       CarWash?  @relation(fields: [carwashId], references: [id])
+  supplierId    String?
+  supplier      Supplier? @relation(fields: [supplierId], references: [id])
+  franchiseId   String?
+  franchise     Franchise? @relation(fields: [franchiseId], references: [id])
+  listingId     String?
+  listing       BusinessListing? @relation(fields: [listingId], references: [id])
+
+  // Status
+  status        String    @default("new") // new, contacted, qualified, closed
+  notes         String?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([leadType, createdAt])
+  @@index([status])
+  @@index([cityId])
+}
+
+// ─── CONTENT ─────────────────────────────────────────────────────────────────
+
+model Guide {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  description   String?
+  body          String        // MDX content
+  category      String
+  city          String?
+  leadType      LeadType?
+  ctaTitle      String?
+  ctaDescription String?
+  featured      Boolean       @default(false)
+  publishedAt   DateTime?
+  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime      @default(now())
+  status        ContentStatus @default(draft)
+
+  @@index([category, status])
+  @@index([slug])
+}
+
+model FaqItem {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String
+  city      String?
+  order     Int      @default(0)
+  status    ContentStatus @default(active)
+  createdAt DateTime @default(now())
+
+  @@index([category, status])
+}
+
+// ─── BENCHMARKS ──────────────────────────────────────────────────────────────
+
+model Benchmark {
+  id            String      @id @default(cuid())
+  carwashType   CarWashType
+  city          String?     // null = national average
+  metric        String      // investment_min, investment_max, payback_months, avg_check, etc.
+  value         Float
+  unit          String?     // rub, months, percent
+  year          Int
+  source        String?
+  createdAt     DateTime    @default(now())
+
+  @@index([carwashType, city])
+  @@unique([carwashType, city, metric, year])
+}
+
+// ─── ADMIN ───────────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      UserRole @default(EDITOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}

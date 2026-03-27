@@ -1,0 +1,43 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/igorgurbamov/carwash-portal && if echo \"$CLAUDE_TOOL_INPUT_FILE_PATH\" | grep -qE '\\.(ts|tsx)$'; then npx tsc --noEmit --project apps/web/tsconfig.json 2>&1 | head -20 || true; fi",
+            "description": "TypeScript check after file edit"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/igorgurbamov/carwash-portal && if echo \"$CLAUDE_TOOL_INPUT_FILE_PATH\" | grep -qE '\\.(ts|tsx|js)$'; then npx eslint \"$CLAUDE_TOOL_INPUT_FILE_PATH\" --max-warnings=0 2>&1 | tail -10 || true; fi",
+            "description": "ESLint check after file edit"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT_COMMAND\" | grep -qE 'rm -rf|DROP TABLE|DELETE FROM.*WHERE 1=1|git push --force'; then echo 'BLOCKED: Destructive command requires explicit confirmation' && exit 1; fi",
+            "description": "Block destructive commands"
+          }
+        ]
+      }
+    ]
+  },
+  "guardrails": {
+    "no_secrets_in_code": true,
+    "no_console_log_in_production": true,
+    "require_zod_validation": true
+  }
+}

@@ -17,6 +17,11 @@ import { employeeDataIngestionSpecialist } from './employee-data-ingestion-speci
 import { employeeAnalyticsCroSpecialist } from './employee-analytics-cro-specialist.js'
 import { employeeQaSecurityEngineer } from './employee-qa-security-engineer.js'
 import { employeeDevopsReleaseEngineer } from './employee-devops-release-engineer.js'
+import { intelOrchestrator } from './intel-orchestrator.js'
+import { intelMarketResearcher } from './intel-market-researcher.js'
+import { intelCompetitorMonitor } from './intel-competitor-monitor.js'
+import { intelTrendAnalyst } from './intel-trend-analyst.js'
+import { intelStrategyBuilder } from './intel-strategy-builder.js'
 
 export const agentDefinitions = {
   // Phase 1: original agents
@@ -40,6 +45,12 @@ export const agentDefinitions = {
   'employee-analytics-cro-specialist': employeeAnalyticsCroSpecialist,
   'employee-qa-security-engineer': employeeQaSecurityEngineer,
   'employee-devops-release-engineer': employeeDevopsReleaseEngineer,
+  // Phase 3: market intelligence team
+  'intel-orchestrator': intelOrchestrator,
+  'intel-market-researcher': intelMarketResearcher,
+  'intel-competitor-monitor': intelCompetitorMonitor,
+  'intel-trend-analyst': intelTrendAnalyst,
+  'intel-strategy-builder': intelStrategyBuilder,
 } as const
 
 export type AgentName = keyof typeof agentDefinitions

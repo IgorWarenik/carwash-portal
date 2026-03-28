@@ -89,7 +89,16 @@ function formatRub(n: number) {
   return `${Math.round(n / 1000)} тыс. ₽`
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
+
+export async function generateStaticParams() {
+  try {
+    const franchises = await prisma.franchise.findMany({ select: { slug: true } })
+    return franchises.map(f => ({ slug: f.slug }))
+  } catch {
+    return []
+  }
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const f = await prisma.franchise.findUnique({ where: { slug: params.slug } })

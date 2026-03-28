@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { prisma } from '@carwash/db'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Франшизы автомоек — сравнение 2025: инвестиции, ROI, окупаемость',

@@ -24,7 +24,16 @@ const TYPE_FILTERS = [
   { value: 'detailing', label: 'Детейлинг' },
 ]
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
+
+export async function generateStaticParams() {
+  try {
+    const cities = await prisma.city.findMany({ where: { isActive: true }, select: { slug: true } })
+    return cities.map((c) => ({ city: c.slug }))
+  } catch {
+    return []
+  }
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = await prisma.city.findUnique({ where: { slug: params.city } })

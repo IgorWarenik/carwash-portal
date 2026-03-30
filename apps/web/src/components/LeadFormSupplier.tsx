@@ -7,6 +7,10 @@ function sanitizePhone(value: string): string {
   return value.replace(/\D/g, '').slice(0, 11)
 }
 
+function isValidRuPhone(phone: string): boolean {
+  return phone.length === 11 && (phone[0] === '7' || phone[0] === '8')
+}
+
 export function LeadFormSupplier() {
   const [company, setCompany] = useState('')
   const [phone, setPhone] = useState('')
@@ -17,7 +21,7 @@ export function LeadFormSupplier() {
   function validate() {
     const e: Record<string, string> = {}
     if (!company.trim() || company.trim().length < 2) e.company = 'Введите название компании'
-    if (!phone || phone.length < 10) e.phone = 'Введите корректный номер телефона'
+    if (!isValidRuPhone(phone)) e.phone = 'Введите номер в формате 7XXXXXXXXXX или 8XXXXXXXXXX (11 цифр)'
     return e
   }
 

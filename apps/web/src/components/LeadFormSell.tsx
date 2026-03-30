@@ -7,6 +7,10 @@ function sanitizePhone(value: string): string {
   return value.replace(/\D/g, '').slice(0, 11)
 }
 
+function isValidRuPhone(phone: string): boolean {
+  return phone.length === 11 && (phone[0] === '7' || phone[0] === '8')
+}
+
 const WASH_TYPES = [
   { value: 'self_service', label: 'Самообслуживание' },
   { value: 'manual', label: 'Ручная мойка' },
@@ -28,7 +32,7 @@ export function LeadFormSell() {
   function validate() {
     const e: Record<string, string> = {}
     if (!name.trim() || name.trim().length < 2) e.name = 'Введите имя (минимум 2 символа)'
-    if (!phone || phone.length < 10) e.phone = 'Введите корректный номер телефона'
+    if (!isValidRuPhone(phone)) e.phone = 'Введите номер в формате 7XXXXXXXXXX или 8XXXXXXXXXX (11 цифр)'
     return e
   }
 

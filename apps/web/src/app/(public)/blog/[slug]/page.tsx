@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { NEW_ARTICLES_DATA } from '../articles-data'
+import { ARCHIVE_ARTICLES } from '../articles-archive'
 
 interface Props { params: { slug: string } }
 
@@ -469,6 +471,8 @@ const ARTICLES: Record<string, {
 Планируйте контент за **4–6 недель** до пика — алгоритмы Яндекса индексируют медленно.
     `,
   },
+  ...NEW_ARTICLES_DATA,
+  ...ARCHIVE_ARTICLES,
 }
 
 export function generateStaticParams() {
@@ -489,6 +493,12 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
+function inlineHtml(text: string): string {
+  return text
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-[#e94560] hover:underline">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+}
+
 function renderMarkdown(text: string) {
   const lines = text.trim().split('\n')
   const elements: React.ReactNode[] = []
@@ -498,9 +508,9 @@ function renderMarkdown(text: string) {
     const line = lines[i].trim()
 
     if (line.startsWith('## ')) {
-      elements.push(<h2 key={i} className="text-2xl font-bold mt-8 mb-4">{line.slice(3)}</h2>)
+      elements.push(<h2 key={i} className="text-2xl font-bold mt-8 mb-4" dangerouslySetInnerHTML={{ __html: inlineHtml(line.slice(3)) }} />)
     } else if (line.startsWith('### ')) {
-      elements.push(<h3 key={i} className="text-xl font-semibold mt-6 mb-3">{line.slice(4)}</h3>)
+      elements.push(<h3 key={i} className="text-xl font-semibold mt-6 mb-3" dangerouslySetInnerHTML={{ __html: inlineHtml(line.slice(4)) }} />)
     } else if (line.startsWith('| ')) {
       // Table
       const tableLines: string[] = []
@@ -515,8 +525,8 @@ function renderMarkdown(text: string) {
             {rows.map((row, ri) => {
               const cells = row.split('|').filter(Boolean).map(c => c.trim())
               return ri === 0
-                ? <thead key={ri}><tr className="bg-gray-50">{cells.map((c, ci) => <th key={ci} className="border border-gray-200 px-3 py-2 text-left font-semibold">{c}</th>)}</tr></thead>
-                : <tbody key={`b${ri}`}><tr>{cells.map((c, ci) => <td key={ci} className="border border-gray-200 px-3 py-2">{c}</td>)}</tr></tbody>
+                ? <thead key={ri}><tr className="bg-gray-50">{cells.map((c, ci) => <th key={ci} className="border border-gray-200 px-3 py-2 text-left font-semibold" dangerouslySetInnerHTML={{ __html: inlineHtml(c) }} />)}</tr></thead>
+                : <tbody key={`b${ri}`}><tr>{cells.map((c, ci) => <td key={ci} className="border border-gray-200 px-3 py-2" dangerouslySetInnerHTML={{ __html: inlineHtml(c) }} />)}</tr></tbody>
             })}
           </table>
         </div>
@@ -532,8 +542,8 @@ function renderMarkdown(text: string) {
         <ul key={i} className="space-y-2 my-3">
           {items.map((item, ii) => (
             <li key={ii} className="flex items-start gap-2 text-gray-700">
-              <span className="mt-1">{item.startsWith('✅') ? '✅' : item.startsWith('❌') ? '❌' : '•'}</span>
-              <span>{item.replace(/^[-✅❌]\s*/, '')}</span>
+              <span className="mt-1 flex-shrink-0">{item.startsWith('✅') ? '✅' : item.startsWith('❌') ? '❌' : '•'}</span>
+              <span dangerouslySetInnerHTML={{ __html: inlineHtml(item.replace(/^[-✅❌]\s*/, '')) }} />
             </li>
           ))}
         </ul>
@@ -547,7 +557,7 @@ function renderMarkdown(text: string) {
       }
       elements.push(
         <ol key={i} className="list-decimal list-inside space-y-2 my-3">
-          {items.map((item, ii) => <li key={ii} className="text-gray-700">{item}</li>)}
+          {items.map((item, ii) => <li key={ii} className="text-gray-700" dangerouslySetInnerHTML={{ __html: inlineHtml(item) }} />)}
         </ol>
       )
       continue
@@ -562,9 +572,7 @@ function renderMarkdown(text: string) {
     } else if (line.startsWith('**') && line.endsWith('**') && !line.slice(2).includes('**')) {
       elements.push(<p key={i} className="font-semibold text-gray-900 mt-4 mb-1">{line.slice(2, -2)}</p>)
     } else if (line) {
-      const withLinks = line.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-[#e94560] hover:underline">$1</a>')
-      const withBold = withLinks.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-      elements.push(<p key={i} className="text-gray-700 leading-relaxed mb-3" dangerouslySetInnerHTML={{ __html: withBold }} />)
+      elements.push(<p key={i} className="text-gray-700 leading-relaxed mb-3" dangerouslySetInnerHTML={{ __html: inlineHtml(line) }} />)
     }
     i++
   }
@@ -592,7 +600,7 @@ export default function BlogArticlePage({ params }: Props) {
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-2">
         <Link href="/" className="hover:text-[#e94560]">Главная</Link>
         <span>›</span>
-        <Link href="/blog" className="hover:text-[#e94560]">Блог</Link>
+        <Link href="/blog" className="hover:text-[#e94560]">Журнал</Link>
         <span>›</span>
         <span className="text-gray-900 line-clamp-1 max-w-xs">{article.title}</span>
       </nav>
@@ -630,7 +638,7 @@ export default function BlogArticlePage({ params }: Props) {
       </div>
 
       <div className="mt-8">
-        <Link href="/blog" className="text-[#e94560] font-semibold hover:underline">← Все статьи</Link>
+        <Link href="/blog" className="text-[#e94560] font-semibold hover:underline">← Все материалы Журнала</Link>
       </div>
     </main>
   )

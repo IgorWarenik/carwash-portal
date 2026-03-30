@@ -23,16 +23,16 @@ const tools = [
     title: 'Оценка бизнеса',
     description: 'Узнайте рыночную стоимость автомойки перед покупкой или продажей. Методика: мультипликатор EBITDA.',
     icon: '💰',
-    badge: 'Скоро',
-    ready: false,
+    badge: 'Новое',
+    ready: true,
   },
   {
     href: '/tools/ocenka-lokacii',
     title: 'Оценка локации',
     description: 'Пошаговый wizard: оцените трафик, конкуренцию и потенциал точки для открытия автомойки.',
     icon: '📍',
-    badge: 'Скоро',
-    ready: false,
+    badge: 'Новое',
+    ready: true,
   },
 ]
 

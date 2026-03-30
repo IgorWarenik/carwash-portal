@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { LeadFormSell } from '@/components/LeadFormSell'
+import { LeadFormSupplier } from '@/components/LeadFormSupplier'
 
 export const metadata: Metadata = {
   title: 'Продать автомойку — разместить объявление о продаже бизнеса',
@@ -81,49 +83,8 @@ export default function SellCarwashPage() {
         <section id="seller-form" className="bg-[#1a1a2e] text-white rounded-2xl p-8 mb-14">
           <h2 className="text-2xl font-bold mb-2">Оставить заявку на продажу</h2>
           <p className="text-gray-400 mb-8">Заполните форму — менеджер свяжется в течение 2 часов в рабочее время.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Ваше имя *</label>
-              <input type="text" placeholder="Александр" className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#e94560]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Телефон *</label>
-              <input type="tel" placeholder="+7 (___) ___-__-__" className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#e94560]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Тип мойки</label>
-              <select className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#e94560]">
-                <option value="">Выберите</option>
-                <option>Самообслуживание</option>
-                <option>Ручная мойка</option>
-                <option>Автоматическая</option>
-                <option>Детейлинг</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Город</label>
-              <input type="text" placeholder="Москва" className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#e94560]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Ожидаемая цена</label>
-              <select className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#e94560]">
-                <option value="">Не знаю, помогите оценить</option>
-                <option>До 2 млн ₽</option>
-                <option>2–5 млн ₽</option>
-                <option>5–10 млн ₽</option>
-                <option>Свыше 10 млн ₽</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Ежемесячная прибыль</label>
-              <input type="text" placeholder="150 000 ₽" className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#e94560]" />
-            </div>
-            <div className="sm:col-span-2">
-              <button className="w-full py-4 bg-[#e94560] rounded-xl font-semibold hover:bg-[#c73652] transition-colors">
-                Отправить заявку
-              </button>
-              <p className="text-xs text-gray-500 mt-2">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
-            </div>
+          <div className="max-w-2xl">
+            <LeadFormSell />
           </div>
         </section>
 
@@ -133,21 +94,7 @@ export default function SellCarwashPage() {
           <p className="text-gray-600 mb-6">
             Разместите вашу компанию в каталоге поставщиков — более 5 000 предпринимателей в месяц ищут здесь оборудование и партнёров.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Название компании</label>
-              <input type="text" placeholder="ООО «ТехМойка»" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#e94560]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Телефон</label>
-              <input type="tel" placeholder="+7 (___) ___-__-__" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#e94560]" />
-            </div>
-            <div className="sm:col-span-2">
-              <button className="px-6 py-3 bg-[#1a1a2e] text-white rounded-xl font-semibold hover:bg-[#0f0f20] transition-colors">
-                Подать заявку на размещение
-              </button>
-            </div>
-          </div>
+          <LeadFormSupplier />
         </section>
 
       </div>

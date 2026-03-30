@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { prisma } from '@carwash/db'
+import { LeadFormBuy } from '@/components/LeadFormBuy'
 
 export const revalidate = 300
 
@@ -132,9 +133,9 @@ export default async function BuyCarwashPage() {
                   )}
                 </div>
 
-                <button className="mt-4 w-full py-2.5 bg-[#e94560] text-white rounded-xl text-sm font-semibold hover:bg-[#c73652] transition-colors">
+                <a href="#lead-form" className="mt-4 block w-full py-2.5 bg-[#e94560] text-white rounded-xl text-sm font-semibold hover:bg-[#c73652] transition-colors text-center">
                   Узнать подробности
-                </button>
+                </a>
               </div>
             ))}
           </div>
@@ -178,40 +179,7 @@ export default async function BuyCarwashPage() {
           <p className="text-gray-300 mb-8">
             Оставьте заявку — наш менеджер свяжется в течение 2 часов и расскажет о доступных объектах в вашем регионе.
           </p>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Ваше имя</label>
-                <input
-                  type="text"
-                  placeholder="Иван"
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#e94560]"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Телефон</label>
-                <input
-                  type="tel"
-                  placeholder="+7 (___) ___-__-__"
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#e94560]"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Бюджет</label>
-              <select className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#e94560]">
-                <option value="">Выберите бюджет</option>
-                <option value="1">До 2 млн ₽</option>
-                <option value="2">2–5 млн ₽</option>
-                <option value="3">5–10 млн ₽</option>
-                <option value="4">Свыше 10 млн ₽</option>
-              </select>
-            </div>
-            <button className="w-full py-4 bg-[#e94560] rounded-xl font-semibold hover:bg-[#c73652] transition-colors">
-              Отправить заявку
-            </button>
-            <p className="text-xs text-gray-500">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
-          </div>
+          <LeadFormBuy />
         </div>
       </section>
 

@@ -5,6 +5,7 @@ const NAV_LINKS = [
   { href: '/franshizy', label: 'Франшизы' },
   { href: '/kupit-avtomoiku', label: 'Купить бизнес' },
   { href: '/otkryt-avtomoiku', label: 'Открыть мойку' },
+  { href: '/blog', label: 'Журнал' },
   { href: '/tools', label: 'Калькуляторы' },
 ]
 

@@ -17,6 +17,20 @@ export const metadata: Metadata = {
     'Каталог автомоек России: найти, купить, продать, открыть автомойку. ' +
     'Поставщики оборудования, франшизы, калькуляторы окупаемости.',
   robots: { index: true, follow: true },
+  openGraph: {
+    type: 'website',
+    locale: 'ru_RU',
+    siteName: 'Портал Автомоек',
+    title: 'Портал Автомоек — найти, купить, открыть автомойку',
+    description: 'Каталог автомоек, франшизы, калькуляторы ROI. Самообслуживание, ручные, детейлинг.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Портал Автомоек' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Портал Автомоек',
+    description: 'Найти, купить или открыть автомойку в России',
+    images: ['/og-image.png'],
+  },
 }
 
 export default function RootLayout({

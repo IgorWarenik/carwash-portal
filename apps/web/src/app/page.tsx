@@ -6,6 +6,24 @@ export const metadata: Metadata = {
   description:
     'Крупнейший портал автомоек России. Каталог автомоек в вашем городе, ' +
     'покупка и продажа бизнеса, поставщики оборудования, франшизы, калькуляторы окупаемости.',
+  openGraph: {
+    title: 'Портал Автомоек — найти, купить, открыть автомойку в России',
+    description: 'Каталог автомоек, покупка и продажа бизнеса, франшизы, калькуляторы ROI.',
+    url: '/',
+  },
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Портал Автомоек',
+  url: 'https://avtomoyki-portal.ru',
+  description: 'Крупнейший портал автомоек России — каталог, покупка, продажа, открытие автомойки.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://avtomoyki-portal.ru/avtomoyki?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
 }
 
 const TOP_CITIES = [
@@ -62,6 +80,10 @@ const STATS = [
 export default function HomePage() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">

@@ -14,14 +14,15 @@ export interface ArticleMeta {
   image: string
 }
 
-const CATEGORIES = ['Все', 'Открыть бизнес', 'Детейлинг', 'Инвестиции', 'Аналитика', 'Управление', 'Оборудование', 'Технологии', 'Регулирование', 'Купить бизнес', 'Продажа']
-
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 export function BlogClient({ articles }: { articles: ArticleMeta[] }) {
   const [activeCategory, setActiveCategory] = useState('Все')
+
+  // Derive categories dynamically from data
+  const categories = ['Все', ...Array.from(new Set(articles.map(a => a.category))).sort()]
 
   const filtered = activeCategory === 'Все'
     ? articles
@@ -34,7 +35,7 @@ export function BlogClient({ articles }: { articles: ArticleMeta[] }) {
     <>
       {/* Category nav */}
       <div className="flex flex-wrap gap-2 mb-10 overflow-x-auto pb-1">
-        {CATEGORIES.map(cat => (
+        {categories.map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
@@ -73,7 +74,7 @@ export function BlogClient({ articles }: { articles: ArticleMeta[] }) {
       {/* All articles */}
       <h2 className="text-xl font-bold mb-5">
         {activeCategory === 'Все' ? 'Все статьи' : activeCategory}
-        {' '}<span className="text-gray-400 font-normal text-base ml-1">({rest.length})</span>
+        {' '}<span className="text-gray-400 font-normal text-base ml-1">({filtered.length})</span>
       </h2>
       {rest.length > 0 ? (
         <div className="space-y-3">

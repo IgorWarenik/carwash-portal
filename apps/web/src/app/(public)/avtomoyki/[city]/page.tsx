@@ -160,6 +160,17 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
         })}
       </div>
 
+      {/* Цены и рейтинг */}
+      <div className="flex gap-3 mb-8 text-sm">
+        <Link href={`/avtomoyki/${params.city}/ceny`} className="text-[#e94560] hover:underline font-medium">
+          Цены на мойку в {city.name} →
+        </Link>
+        <span className="text-gray-300">|</span>
+        <Link href="/avtomoyki/reyting" className="text-gray-500 hover:text-[#e94560] transition-colors">
+          Рейтинг лучших →
+        </Link>
+      </div>
+
       {carwashes.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
           <p className="text-lg">Автомоек по выбранному фильтру пока нет</p>
@@ -170,7 +181,7 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {carwashes.map((cw) => (
-            <div key={cw.id} className="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-md transition-shadow flex flex-col">
+            <Link key={cw.id} href={`/avtomoyki/${params.city}/${cw.slug}`} className="bg-white border border-gray-200 rounded-2xl p-5 hover:border-[#e94560] hover:shadow-md transition-all flex flex-col group">
               <div className="flex items-start justify-between mb-3">
                 <span className="text-xs font-medium bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
                   {TYPE_LABELS[cw.type] ?? cw.type}
@@ -221,7 +232,8 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
                   </a>
                 )}
               </div>
-            </div>
+              <div className="mt-3 text-sm font-semibold text-[#e94560] group-hover:underline">Подробнее →</div>
+            </Link>
           ))}
         </div>
       )}

@@ -23,13 +23,13 @@ export const metadata: Metadata = {
     siteName: 'Портал Автомоек',
     title: 'Портал Автомоек — найти, купить, открыть автомойку',
     description: 'Каталог автомоек, франшизы, калькуляторы ROI. Самообслуживание, ручные, детейлинг.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Портал Автомоек' }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Портал Автомоек' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Портал Автомоек',
     description: 'Найти, купить или открыть автомойку в России',
-    images: ['/og-image.png'],
+    images: ['/opengraph-image'],
   },
 }
 

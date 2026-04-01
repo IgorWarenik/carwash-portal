@@ -35,7 +35,7 @@ const BLOG_SLUGS = [
   'kak-otkryt-ip-dlya-avtomoiki',
   'bescontactnaya-moika-plyusy-minusy',
   'korporativnye-klienty-dlya-avtomoiki',
-  'shinomontazh-pri-avtomoike',
+  'shiномontazh-pri-avtomoike',
   'videonabyudenie-na-avtomoike',
   'cenovaya-politika-avtomoiki',
   'moika-v-torgovom-centre',

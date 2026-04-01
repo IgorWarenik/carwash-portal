@@ -580,9 +580,17 @@ function renderMarkdown(text: string) {
   return elements
 }
 
+function getRelated(currentSlug: string, currentCategory: string, count = 3) {
+  return Object.entries(ARTICLES)
+    .filter(([slug, a]) => slug !== currentSlug && a.category === currentCategory)
+    .slice(0, count)
+}
+
 export default function BlogArticlePage({ params }: Props) {
   const article = ARTICLES[params.slug]
   if (!article) notFound()
+
+  const related = getRelated(params.slug, article.category)
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -636,6 +644,25 @@ export default function BlogArticlePage({ params }: Props) {
           </Link>
         </div>
       </div>
+
+      {related.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-xl font-bold mb-4">Читайте также</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {related.map(([slug, rel]) => (
+              <Link
+                key={slug}
+                href={`/blog/${slug}`}
+                className="group bg-white border border-gray-200 hover:border-[#e94560] rounded-2xl p-4 transition-all hover:shadow-sm"
+              >
+                <span className="text-xs font-medium text-[#e94560] bg-[#e94560]/10 px-2 py-0.5 rounded-full">{rel.category}</span>
+                <h3 className="font-semibold mt-2 mb-1 text-sm leading-snug group-hover:text-[#e94560] transition-colors line-clamp-2">{rel.title}</h3>
+                <p className="text-xs text-gray-500 line-clamp-2">{rel.excerpt}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-8">
         <Link href="/blog" className="text-[#e94560] font-semibold hover:underline">← Все материалы Журнала</Link>

@@ -30,6 +30,25 @@ const jsonLd = {
   ],
 }
 
+const FAQ = [
+  { q: 'Сколько стоит открыть автомойку с нуля?', a: 'Мойка самообслуживания на 2 поста — от 1,3 млн ₽, на 4–6 постов — 2,5–5 млн ₽. Ручная мойка с боксом — от 2 млн ₽. Автоматическая портальная — от 5 млн ₽.' },
+  { q: 'Сколько зарабатывает автомойка в месяц?', a: 'Мойка самообслуживания на 4 поста при хорошей локации даёт 150–350 тыс. ₽ чистой прибыли в месяц. Ручная мойка — 80–200 тыс. ₽ после вычета зарплат. Используйте калькулятор ROI для точного расчёта.' },
+  { q: 'Какой формат мойки выгоднее открыть?', a: 'Самообслуживание — лучший формат для старта: нет персонала, работа 24/7, рентабельность 40–55%. Ручная мойка даёт больше услуг, но зависит от сотрудников. Детейлинг — высокий средний чек, но узкая аудитория.' },
+  { q: 'Какие документы нужны для открытия?', a: 'Регистрация ИП или ООО, договор аренды или собственности на землю, разрешение на строительство (если бокс), заключение СЭС и пожарной инспекции, договор на вывоз нефтесодержащих отходов.' },
+  { q: 'Нужна ли лицензия для автомойки?', a: 'Нет, лицензия не нужна. Требуется соблюдение санитарных норм (СанПиН 2.1.5.980-00) и наличие системы очистки сточных вод. Для самообслуживания — регистрация как ИП на УСН или патент.' },
+  { q: 'Как быстро окупится автомойка?', a: 'При правильной локации и среднем трафике — за 14–30 месяцев. Самообслуживание окупается быстрее (12–20 мес.), ручная — 18–36 мес. Точный расчёт — в нашем калькуляторе ROI.' },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+
 const FORMATS = [
   {
     type: 'Самообслуживание',
@@ -137,6 +156,10 @@ export default function OpenCarwashPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* Hero */}
@@ -281,6 +304,22 @@ export default function OpenCarwashPage() {
                 <span className="text-[#e94560] mt-0.5">☑</span>
                 <span className="text-sm text-gray-700">{doc}</span>
               </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Частые вопросы об открытии автомойки</h2>
+          <div className="space-y-3">
+            {FAQ.map(({ q, a }) => (
+              <details key={q} className="group bg-white border border-gray-200 rounded-2xl overflow-hidden">
+                <summary className="flex justify-between items-center px-6 py-4 cursor-pointer font-semibold text-gray-900 hover:text-[#e94560] transition-colors list-none">
+                  {q}
+                  <span className="ml-4 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform text-xl leading-none">›</span>
+                </summary>
+                <p className="px-6 pb-4 text-gray-600 text-sm leading-relaxed">{a}</p>
+              </details>
             ))}
           </div>
         </section>

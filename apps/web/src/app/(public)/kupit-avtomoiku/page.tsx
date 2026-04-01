@@ -13,6 +13,25 @@ export const metadata: Metadata = {
   alternates: { canonical: '/kupit-avtomoiku' },
 }
 
+const FAQ = [
+  { q: 'Сколько стоит купить готовую автомойку?', a: 'Цены варьируются от 800 тыс. ₽ за небольшую ручную мойку до 15–30 млн ₽ за автоматическую или крупный комплекс самообслуживания. Средняя стоимость мойки самообслуживания на 4–6 постов — 3–8 млн ₽.' },
+  { q: 'Как проверить мойку перед покупкой?', a: 'Запросите выручку за последние 12 месяцев (Z-отчёты с терминала), договор аренды, документы на оборудование и коммуникации. Наши объявления содержат верифицированные финансовые показатели.' },
+  { q: 'Какие документы нужны для сделки?', a: 'Договор купли-продажи бизнеса или оборудования, акт приёма-передачи, выписка из ЕГРЮЛ/ЕГРИП продавца, договор аренды с согласием арендодателя на переуступку.' },
+  { q: 'Сколько времени занимает сделка?', a: 'В среднем 2–4 недели: 3–5 дней на проверку документов, 1–2 недели на переговоры и оформление, 3–5 дней на передачу бизнеса.' },
+  { q: 'Можно ли взять кредит на покупку?', a: 'Да. Сбербанк, ВТБ и Альфа-Банк кредитуют покупку готового бизнеса по программам для малого бизнеса под 12–18% годовых при наличии залога или поручителя.' },
+  { q: 'Окупится ли вложение?', a: 'Мойки самообслуживания при правильной локации окупаются за 1,5–3 года. Используйте наш калькулятор ROI для расчёта конкретного объекта.' },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
@@ -46,6 +65,10 @@ export default async function BuyCarwashPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* Breadcrumb */}
@@ -180,6 +203,22 @@ export default async function BuyCarwashPage() {
             Оставьте заявку — наш менеджер свяжется в течение 2 часов и расскажет о доступных объектах в вашем регионе.
           </p>
           <LeadFormBuy />
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="mt-16">
+        <h2 className="text-2xl font-bold mb-6">Частые вопросы о покупке автомойки</h2>
+        <div className="space-y-3">
+          {FAQ.map(({ q, a }) => (
+            <details key={q} className="group bg-white border border-gray-200 rounded-2xl overflow-hidden">
+              <summary className="flex justify-between items-center px-6 py-4 cursor-pointer font-semibold text-gray-900 hover:text-[#e94560] transition-colors list-none">
+                {q}
+                <span className="ml-4 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform text-xl leading-none">›</span>
+              </summary>
+              <p className="px-6 pb-4 text-gray-600 text-sm leading-relaxed">{a}</p>
+            </details>
+          ))}
         </div>
       </section>
 

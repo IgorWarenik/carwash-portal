@@ -79,10 +79,29 @@ export default async function BuyCarwashPage() {
       </nav>
 
       <h1 className="text-3xl font-bold mb-3">Купить автомойку — готовый бизнес</h1>
-      <p className="text-gray-500 text-lg mb-10 max-w-2xl">
+      <p className="text-gray-500 text-lg mb-6 max-w-2xl">
         Верифицированные объявления о продаже автомоечного бизнеса в России.
         Реальные финансовые показатели, помощь в проверке сделки.
       </p>
+
+      {/* City links */}
+      <div className="flex flex-wrap gap-2 mb-10">
+        {[
+          { slug: 'moskva', name: 'Москва' },
+          { slug: 'sankt-peterburg', name: 'Санкт-Петербург' },
+          { slug: 'ekaterinburg', name: 'Екатеринбург' },
+          { slug: 'krasnodar', name: 'Краснодар' },
+          { slug: 'kazan', name: 'Казань' },
+          { slug: 'novosibirsk', name: 'Новосибирск' },
+          { slug: 'ufa', name: 'Уфа' },
+          { slug: 'tyumen', name: 'Тюмень' },
+        ].map(c => (
+          <Link key={c.slug} href={`/kupit-avtomoiku/${c.slug}`}
+            className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-[#e94560] hover:text-white transition-colors">
+            {c.name}
+          </Link>
+        ))}
+      </div>
 
       {listings.length === 0 ? (
         <div className="text-center py-20">

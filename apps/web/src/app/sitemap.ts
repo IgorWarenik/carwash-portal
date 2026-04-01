@@ -107,8 +107,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  // Dynamic city + carwash pages from DB
+  const TYPE_SLUGS = ['samobsluzhivanie', 'ruchnaya', 'avtomaticheskaya', 'deteyling', 'dlya_gruzovik']
+
+  // Dynamic city pages from DB
   let cityPages: MetadataRoute.Sitemap = []
+  let cityTypePages: MetadataRoute.Sitemap = []
+  let cityBuyPages: MetadataRoute.Sitemap = []
+  let cityPricePages: MetadataRoute.Sitemap = []
   try {
     const { prisma } = await import('@carwash/db')
     const cities = await prisma.city.findMany({ where: { isActive: true }, select: { slug: true } })
@@ -118,9 +123,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     }))
+    cityTypePages = cities.flatMap(c =>
+      TYPE_SLUGS.map(t => ({
+        url: `${BASE_URL}/avtomoyki/${c.slug}/${t}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }))
+    )
+    cityBuyPages = cities.map(c => ({
+      url: `${BASE_URL}/kupit-avtomoiku/${c.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    }))
+    cityPricePages = cities.map(c => ({
+      url: `${BASE_URL}/avtomoyki/${c.slug}/ceny`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
   } catch {
     // DB unavailable during build — skip dynamic pages
   }
 
-  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages]
+  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...cityPricePages]
 }

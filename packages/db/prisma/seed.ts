@@ -214,6 +214,57 @@ async function main() {
     }
   }
 
+  // Seed Benchmark avg_check data
+  const BENCHMARKS: Array<{ carwashType: CarWashType; city: string | null; metric: string; value: number; unit: string; year: number; source: string }> = [
+    // National averages (city: null)
+    { carwashType: 'self_service', city: null, metric: 'avg_check', value: 220, unit: 'rub', year: 2025, source: 'industry_report_2025' },
+    { carwashType: 'manual',       city: null, metric: 'avg_check', value: 900, unit: 'rub', year: 2025, source: 'industry_report_2025' },
+    { carwashType: 'automatic',    city: null, metric: 'avg_check', value: 600, unit: 'rub', year: 2025, source: 'industry_report_2025' },
+    { carwashType: 'detailing',    city: null, metric: 'avg_check', value: 8500, unit: 'rub', year: 2025, source: 'industry_report_2025' },
+    { carwashType: 'truck',        city: null, metric: 'avg_check', value: 2500, unit: 'rub', year: 2025, source: 'industry_report_2025' },
+    // Москва
+    { carwashType: 'self_service', city: 'moskva', metric: 'avg_check', value: 280, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'manual',       city: 'moskva', metric: 'avg_check', value: 1200, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'automatic',    city: 'moskva', metric: 'avg_check', value: 700, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'detailing',    city: 'moskva', metric: 'avg_check', value: 12000, unit: 'rub', year: 2025, source: 'market_research' },
+    // Санкт-Петербург
+    { carwashType: 'self_service', city: 'sankt-peterburg', metric: 'avg_check', value: 250, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'manual',       city: 'sankt-peterburg', metric: 'avg_check', value: 1000, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'automatic',    city: 'sankt-peterburg', metric: 'avg_check', value: 650, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'detailing',    city: 'sankt-peterburg', metric: 'avg_check', value: 9500, unit: 'rub', year: 2025, source: 'market_research' },
+    // Екатеринбург
+    { carwashType: 'self_service', city: 'ekaterinburg', metric: 'avg_check', value: 200, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'manual',       city: 'ekaterinburg', metric: 'avg_check', value: 800, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'automatic',    city: 'ekaterinburg', metric: 'avg_check', value: 550, unit: 'rub', year: 2025, source: 'market_research' },
+    // Краснодар
+    { carwashType: 'self_service', city: 'krasnodar', metric: 'avg_check', value: 190, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'manual',       city: 'krasnodar', metric: 'avg_check', value: 750, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'automatic',    city: 'krasnodar', metric: 'avg_check', value: 500, unit: 'rub', year: 2025, source: 'market_research' },
+    // Казань
+    { carwashType: 'self_service', city: 'kazan', metric: 'avg_check', value: 210, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'manual',       city: 'kazan', metric: 'avg_check', value: 850, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'automatic',    city: 'kazan', metric: 'avg_check', value: 580, unit: 'rub', year: 2025, source: 'market_research' },
+    // Новосибирск
+    { carwashType: 'self_service', city: 'novosibirsk', metric: 'avg_check', value: 195, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'manual',       city: 'novosibirsk', metric: 'avg_check', value: 780, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'automatic',    city: 'novosibirsk', metric: 'avg_check', value: 520, unit: 'rub', year: 2025, source: 'market_research' },
+    // Тюмень
+    { carwashType: 'self_service', city: 'tyumen', metric: 'avg_check', value: 230, unit: 'rub', year: 2025, source: 'market_research' },
+    { carwashType: 'manual',       city: 'tyumen', metric: 'avg_check', value: 950, unit: 'rub', year: 2025, source: 'market_research' },
+  ]
+
+  for (const b of BENCHMARKS) {
+    const existing = await prisma.benchmark.findFirst({
+      where: { carwashType: b.carwashType, city: b.city, metric: b.metric, year: b.year },
+    })
+    if (existing) {
+      await prisma.benchmark.update({ where: { id: existing.id }, data: { value: b.value } })
+    } else {
+      await prisma.benchmark.create({ data: b })
+    }
+  }
+  process.stdout.write('  📊 Benchmarks seeded\n')
+
   console.log('✅ Seed complete!')
 }
 

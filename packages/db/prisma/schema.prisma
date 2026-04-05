@@ -135,6 +135,12 @@ model CarWash {
   verifiedBy    String?
   lastCheckedAt DateTime?
 
+  // Owner claim
+  claimedByOwner Boolean   @default(false)
+  ownerEmail     String?
+  claimToken     String?   @unique
+  claimedAt      DateTime?
+
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
@@ -290,6 +296,7 @@ model Lead {
   // Status
   status        String    @default("new") // new, contacted, qualified, closed
   notes         String?
+  phoneVerified Boolean   @default(false)
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -350,6 +357,19 @@ model Benchmark {
 
   @@index([carwashType, city])
   @@unique([carwashType, city, metric, year])
+}
+
+// ─── PHONE VERIFICATION ──────────────────────────────────────────────────────
+
+model PhoneOtp {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone, used])
 }
 
 // ─── ADMIN ───────────────────────────────────────────────────────────────────

@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
+import { prisma } from '@carwash/db'
 import { RoiCalculatorClient } from './RoiCalculatorClient'
+
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Калькулятор окупаемости автомойки — ROI за 2 минуты',
@@ -16,7 +19,17 @@ const jsonLd = {
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'RUB' },
 }
 
-export default function RoiCalculatorPage() {
+export default async function RoiCalculatorPage() {
+  let nationalBenchmarks: Record<string, number> = {}
+  try {
+    const rows = await prisma.benchmark.findMany({
+      where: { metric: 'avg_check', city: null },
+    })
+    nationalBenchmarks = Object.fromEntries(rows.map(r => [r.carwashType, r.value]))
+  } catch {
+    // DB unavailable — client falls back to hardcoded defaults
+  }
+
   return (
     <main className="max-w-4xl mx-auto px-4 py-12">
       <script
@@ -32,7 +45,7 @@ export default function RoiCalculatorPage() {
         </p>
       </div>
 
-      <RoiCalculatorClient />
+      <RoiCalculatorClient nationalBenchmarks={nationalBenchmarks} />
 
       {/* FAQ */}
       <section className="mt-16">

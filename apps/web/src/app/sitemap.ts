@@ -82,6 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/tools`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/avtomoyki/reyting`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
     { url: `${BASE_URL}/kupit-franshizu`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE_URL}/dlya-vladeltcev`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.2 },
     { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.2 },
   ]
@@ -114,9 +115,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let cityTypePages: MetadataRoute.Sitemap = []
   let cityBuyPages: MetadataRoute.Sitemap = []
   let cityPricePages: MetadataRoute.Sitemap = []
+  let districtPages: MetadataRoute.Sitemap = []
   try {
     const { prisma } = await import('@carwash/db')
     const cities = await prisma.city.findMany({ where: { isActive: true }, select: { slug: true } })
+
+    // District pages
+    const districtRows = await prisma.carWash.findMany({
+      where: { status: 'active', district: { not: null } },
+      select: { district: true, city: { select: { slug: true } } },
+      distinct: ['district', 'cityId'],
+    })
+    districtPages = districtRows
+      .filter(r => r.district)
+      .map(r => ({
+        url: `${BASE_URL}/avtomoyki/${r.city.slug}/rayon/${r.district!.toLowerCase().replace(/\s+/g, '-')}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      }))
     cityPages = cities.map(c => ({
       url: `${BASE_URL}/avtomoyki/${c.slug}`,
       lastModified: new Date(),
@@ -147,5 +164,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // DB unavailable during build — skip dynamic pages
   }
 
-  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...cityPricePages]
+  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...cityPricePages, ...districtPages]
 }

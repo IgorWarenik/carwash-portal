@@ -14,6 +14,7 @@ const LeadSchema = z.object({
   utmSource: z.string().optional(),
   utmMedium: z.string().optional(),
   utmCampaign: z.string().optional(),
+  phoneVerified: z.boolean().optional(),
 }).refine(
   (data) => data.phone || data.email,
   { message: 'Укажите телефон или email' }
@@ -42,6 +43,7 @@ export async function submitLead(input: LeadInput) {
         utmSource: parsed.data.utmSource,
         utmMedium: parsed.data.utmMedium,
         utmCampaign: parsed.data.utmCampaign,
+        phoneVerified: parsed.data.phoneVerified ?? false,
       },
     })
     revalidatePath('/admin/leads')

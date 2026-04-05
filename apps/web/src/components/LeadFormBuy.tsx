@@ -15,14 +15,14 @@ export function LeadFormBuy({ compact }: { compact?: boolean } = {}) {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [budget, setBudget] = useState('')
+  const [done, setDone] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
   function validate() {
     const e: Record<string, string> = {}
     if (!name.trim() || name.trim().length < 2) e.name = 'Введите имя (минимум 2 символа)'
-    if (!isValidRuPhone(phone)) e.phone = 'Введите номер в формате 7XXXXXXXXXX или 8XXXXXXXXXX (11 цифр)'
+    if (!isValidRuPhone(phone)) e.phone = 'Введите номер: 79001234567 (11 цифр)'
     return e
   }
 
@@ -40,10 +40,11 @@ export function LeadFormBuy({ compact }: { compact?: boolean } = {}) {
       pageType: 'kupit-avtomoiku',
     })
     setLoading(false)
-    if (result.success) setSuccess(true)
+    if (result.success) setDone(true)
+    else setErrors({ phone: 'Ошибка при отправке заявки. Попробуйте ещё раз.' })
   }
 
-  if (success) {
+  if (done) {
     return (
       <div className={`text-center ${compact ? 'py-4' : 'py-8'}`}>
         <div className="text-3xl mb-2">✅</div>

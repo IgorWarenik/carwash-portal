@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { NEW_ARTICLES_DATA } from '../articles-data'
 import { ARCHIVE_ARTICLES } from '../articles-archive'
+import { NearbyCarwashWidget } from '@/components/NearbyCarwashWidget'
 
 interface Props { params: { slug: string } }
 
@@ -580,6 +581,14 @@ function renderMarkdown(text: string) {
   return elements
 }
 
+const CATEGORY_TYPE_MAP: Record<string, string> = {
+  'Самообслуживание': 'self_service',
+  'Ручная мойка': 'manual',
+  'Автоматическая мойка': 'automatic',
+  'Детейлинг': 'detailing',
+  'Грузовые': 'truck',
+}
+
 function getRelated(currentSlug: string, currentCategory: string, count = 3) {
   return Object.entries(ARTICLES)
     .filter(([slug, a]) => slug !== currentSlug && a.category === currentCategory)
@@ -663,6 +672,10 @@ export default function BlogArticlePage({ params }: Props) {
           </div>
         </div>
       )}
+
+      <div className="mt-12">
+        <NearbyCarwashWidget suggestedType={CATEGORY_TYPE_MAP[article.category]} />
+      </div>
 
       <div className="mt-8">
         <Link href="/blog" className="text-[#e94560] font-semibold hover:underline">← Все материалы Журнала</Link>

@@ -2,10 +2,11 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@carwash/db'
+import { CitySearchInput } from '@/components/CitySearchInput'
 
 interface Props {
   params: { city: string }
-  searchParams: { type?: string; page?: string }
+  searchParams: { type?: string; page?: string; q?: string }
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -63,29 +64,47 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
   const page = Number(searchParams.page ?? 1)
   const perPage = 12
   const typeFilter = searchParams.type as 'self_service' | 'automatic' | 'manual' | 'detailing' | 'truck' | undefined
+  const q = searchParams.q?.trim()
 
   // Noindex for many filter combinations
   const hasFilters = Object.keys(searchParams).length > 1
 
-  const [carwashes, total] = await Promise.all([
+  const baseWhere = {
+    cityId: city.id,
+    status: 'active' as const,
+    ...(typeFilter ? { type: typeFilter } : {}),
+    ...(q ? {
+      OR: [
+        { name: { contains: q, mode: 'insensitive' as const } },
+        { address: { contains: q, mode: 'insensitive' as const } },
+      ],
+    } : {}),
+  }
+
+  const [carwashes, total, benchmarks, districtRows] = await Promise.all([
     prisma.carWash.findMany({
-      where: {
-        cityId: city.id,
-        status: 'active',
-        ...(typeFilter ? { type: typeFilter } : {}),
-      },
+      where: baseWhere,
       orderBy: [{ featured: 'desc' }, { rating: 'desc' }, { reviewCount: 'desc' }],
       skip: (page - 1) * perPage,
       take: perPage,
     }),
-    prisma.carWash.count({
+    prisma.carWash.count({ where: baseWhere }),
+    prisma.benchmark.findMany({
       where: {
-        cityId: city.id,
-        status: 'active',
-        ...(typeFilter ? { type: typeFilter } : {}),
+        metric: 'avg_check',
+        OR: [{ city: params.city }, { city: null }],
       },
+      orderBy: { city: 'desc' }, // city-specific rows first (non-null > null)
+    }),
+    prisma.carWash.findMany({
+      where: { cityId: city.id, status: 'active', district: { not: null } },
+      select: { district: true },
+      distinct: ['district'],
+      take: 8,
     }),
   ])
+
+  const districts = districtRows.map(r => r.district).filter(Boolean) as string[]
 
   const totalPages = Math.ceil(total / perPage)
 
@@ -137,6 +156,8 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
         {total} {total % 10 === 1 && total % 100 !== 11 ? 'мойка' : 'моек'} в каталоге
       </p>
 
+      <CitySearchInput defaultValue={q} citySlug={params.city} />
+
       {/* Type filters */}
       <div className="flex flex-wrap gap-2 mb-8">
         {TYPE_FILTERS.map((f) => {
@@ -161,7 +182,7 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
       </div>
 
       {/* Цены и рейтинг */}
-      <div className="flex gap-3 mb-8 text-sm">
+      <div className="flex flex-wrap gap-3 mb-8 text-sm">
         <Link href={`/avtomoyki/${params.city}/ceny`} className="text-[#e94560] hover:underline font-medium">
           Цены на мойку в {city.name} →
         </Link>
@@ -169,7 +190,50 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
         <Link href="/avtomoyki/reyting" className="text-gray-500 hover:text-[#e94560] transition-colors">
           Рейтинг лучших →
         </Link>
+        {districts.length > 0 && (
+          <>
+            <span className="text-gray-300">|</span>
+            <span className="text-gray-500">По районам:</span>
+            {districts.slice(0, 4).map(d => (
+              <Link
+                key={d}
+                href={`/avtomoyki/${params.city}/rayon/${d.toLowerCase().replace(/\s+/g, '-')}`}
+                className="text-gray-500 hover:text-[#e94560] transition-colors"
+              >
+                {d}
+              </Link>
+            ))}
+          </>
+        )}
       </div>
+
+      {/* Benchmark avg_check strip */}
+      {benchmarks.length > 0 && (() => {
+        // Prefer city-specific row, fall back to national (city: null)
+        const seen = new Set<string>()
+        const best = benchmarks.filter(b => {
+          if (seen.has(b.carwashType)) return false
+          seen.add(b.carwashType)
+          return true
+        })
+        const typeOrder = ['self_service', 'manual', 'automatic', 'detailing']
+        const ordered = typeOrder.map(t => best.find(b => b.carwashType === t)).filter(Boolean) as typeof best
+        if (ordered.length === 0) return null
+        return (
+          <div className="mb-8 bg-blue-50 border border-blue-100 rounded-2xl px-5 py-4">
+            <p className="text-xs text-blue-500 font-medium mb-3 uppercase tracking-wide">Средний чек в {city.name}</p>
+            <div className="flex flex-wrap gap-4">
+              {ordered.map(b => (
+                <div key={b.carwashType} className="text-sm">
+                  <span className="text-gray-500">{TYPE_LABELS[b.carwashType]}:</span>{' '}
+                  <span className="font-semibold text-gray-900">{Math.round(b.value)} ₽</span>
+                  {b.city === null && <span className="text-xs text-gray-400 ml-1">(средн. по РФ)</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      })()}
 
       {carwashes.length === 0 ? (
         <div className="text-center py-20 text-gray-400">

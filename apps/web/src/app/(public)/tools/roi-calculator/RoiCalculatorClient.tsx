@@ -70,7 +70,7 @@ function ResultRow({ label, value, highlight }: { label: string; value: string; 
   )
 }
 
-export function RoiCalculatorClient() {
+export function RoiCalculatorClient({ nationalBenchmarks = {} }: { nationalBenchmarks?: Record<string, number> }) {
   const [washType, setWashType] = useState<WashType>('self_service')
   const [posts, setPosts] = useState(4)
   const [citySize, setCitySize] = useState<CitySize>('million')
@@ -82,7 +82,9 @@ export function RoiCalculatorClient() {
     const cityMult = CITY_MULTIPLIERS[citySize]
     const hoursMult = is24h ? 1.0 : 0.75
 
-    const avgCheck = ((base.avgCheckMin + base.avgCheckMax) / 2) * cityMult
+    // Use real benchmark avg_check if available, else fall back to hardcoded midpoint
+    const baseAvgCheck = nationalBenchmarks[washType] ?? ((base.avgCheckMin + base.avgCheckMax) / 2)
+    const avgCheck = baseAvgCheck * cityMult
     const carsPerDay = base.carsPerDayPerPost * posts * hoursMult
     const dailyRevenue = carsPerDay * avgCheck
     const monthlyRevenue = dailyRevenue * 26 // 26 working days avg
@@ -207,6 +209,12 @@ export function RoiCalculatorClient() {
       <div className="space-y-4">
         {/* Main result card */}
         <div className="bg-[#1a1a2e] text-white rounded-2xl p-6">
+          {nationalBenchmarks[washType] && (
+            <div className="inline-flex items-center gap-1.5 text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full mb-3">
+              <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
+              Средний чек — реальные данные рынка РФ 2025
+            </div>
+          )}
           <h2 className="text-sm font-medium text-gray-400 mb-1">Ежемесячная прибыль</h2>
           <div className="text-4xl font-bold text-[#e94560] mb-4">
             {formatRub(results.monthlyProfit)}

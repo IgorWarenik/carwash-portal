@@ -37,12 +37,20 @@ export function Header() {
             ))}
           </nav>
 
-          <Link
-            href="/prodaty-avtomoiku"
-            className="hidden md:inline-flex items-center px-4 py-2 rounded-lg bg-[#e94560] text-white text-sm font-medium hover:bg-[#c73652] transition-colors"
-          >
-            Продать мойку
-          </Link>
+          <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/dlya-vladeltcev"
+              className="text-sm font-medium text-[#e94560] hover:underline transition-colors"
+            >
+              Для владельцев
+            </Link>
+            <Link
+              href="/prodaty-avtomoiku"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-[#e94560] text-white text-sm font-medium hover:bg-[#c73652] transition-colors"
+            >
+              Продать мойку
+            </Link>
+          </div>
 
           <button
             className="md:hidden p-2 rounded-md text-gray-600 hover:text-[#e94560] transition-colors"

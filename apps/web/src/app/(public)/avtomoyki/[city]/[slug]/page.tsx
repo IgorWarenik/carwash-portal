@@ -25,12 +25,7 @@ const TYPE_MAP: Record<string, { db: string; label: string; labelRod: string; de
   dlya_gruzovik: { db: 'truck', label: 'Мойка для грузовых', labelRod: 'моек для грузовых', desc: 'Специализированные мойки для грузового транспорта, автобусов и спецтехники.' },
 }
 
-export const revalidate = 3600
-export const dynamicParams = true
-
-export async function generateStaticParams() {
-  return []
-}
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Type-SEO page

@@ -5,7 +5,7 @@ import { prisma } from '@carwash/db'
 
 interface Props { params: { city: string; district: string } }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 function decodeDistrict(raw: string): string {
   // URL: mitino → "Митино", severnyy-okrug → "Северный округ"

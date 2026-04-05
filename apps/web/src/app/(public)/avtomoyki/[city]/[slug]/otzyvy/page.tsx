@@ -6,7 +6,7 @@ import { ReviewForm } from '@/components/ReviewForm'
 
 interface Props { params: { city: string; slug: string } }
 
-export const revalidate = 600
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cw = await prisma.carWash.findUnique({

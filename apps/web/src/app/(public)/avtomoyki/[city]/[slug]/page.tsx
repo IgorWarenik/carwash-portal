@@ -26,6 +26,7 @@ const TYPE_MAP: Record<string, { db: string; label: string; labelRod: string; de
 }
 
 export const revalidate = 3600
+export const dynamicParams = true
 
 export async function generateStaticParams() {
   try {
@@ -250,7 +251,7 @@ export default async function CarWashDetailPage({ params }: Props) {
       city: true,
       reviews: { orderBy: { publishedAt: 'desc' }, take: 5 },
     },
-  })
+  }).catch(() => null)
 
   if (!cw || cw.city.slug !== params.city) notFound()
 

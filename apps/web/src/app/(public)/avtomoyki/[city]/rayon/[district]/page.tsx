@@ -22,17 +22,7 @@ const TYPE_LABELS: Record<string, string> = {
 
 export async function generateStaticParams() {
   try {
-    const rows = await prisma.carWash.findMany({
-      where: { status: 'active', district: { not: null } },
-      select: { district: true, city: { select: { slug: true } } },
-      distinct: ['district', 'cityId'],
-    })
-    return rows
-      .filter(r => r.district)
-      .map(r => ({
-        city: r.city.slug,
-        district: r.district!.toLowerCase().replace(/\s+/g, '-'),
-      }))
+    return []
   } catch {
     return []
   }

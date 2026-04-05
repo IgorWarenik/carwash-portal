@@ -29,17 +29,7 @@ export const revalidate = 3600
 export const dynamicParams = true
 
 export async function generateStaticParams() {
-  try {
-    const [carwashes, cities] = await Promise.all([
-      prisma.carWash.findMany({ where: { status: 'active' }, select: { slug: true, city: { select: { slug: true } } } }),
-      prisma.city.findMany({ where: { isActive: true }, select: { slug: true } }),
-    ])
-    const cwParams = carwashes.map(cw => ({ city: cw.city.slug, slug: cw.slug }))
-    const typeParams = cities.flatMap(c => Object.keys(TYPE_MAP).map(t => ({ city: c.slug, slug: t })))
-    return [...cwParams, ...typeParams]
-  } catch {
-    return []
-  }
+  return []
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

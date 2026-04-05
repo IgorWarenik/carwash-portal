@@ -6,7 +6,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://avtomoyki-portal.ru'),
+  metadataBase: new URL((() => { const u = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://avtomoyki-portal.ru'; return u.startsWith('http') ? u : `https://${u}`; })()),
   title: {
     default: 'Портал Автомоек — каталог, покупка, открытие',
     template: '%s | Портал Автомоек',

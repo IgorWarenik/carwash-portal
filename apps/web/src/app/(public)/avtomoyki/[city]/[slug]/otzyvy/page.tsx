@@ -38,12 +38,10 @@ export default async function ReviewsPage({ params }: Props) {
 
   if (!data || data.city.slug !== params.city) notFound()
 
-  const reviews: Array<{ id: string; authorName: string; rating: number; text: string | null; publishedAt: Date | null; createdAt: Date; carwashId: string; source: string | null }> = data.reviews
-  const dist = [5, 4, 3, 2, 1].map(star => ({
-    star,
-    count: reviews.filter(r => r.rating === star).length,
-  }))
-  const total = reviews.length
+  const ratingCounts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+  for (const rev of data.reviews) { ratingCounts[rev.rating] = (ratingCounts[rev.rating] ?? 0) + 1 }
+  const dist = [5, 4, 3, 2, 1].map(star => ({ star, count: ratingCounts[star] ?? 0 }))
+  const total = data.reviews.length
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-12">

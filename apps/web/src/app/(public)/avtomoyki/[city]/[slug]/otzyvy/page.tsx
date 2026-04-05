@@ -40,7 +40,7 @@ export default async function ReviewsPage({ params }: Props) {
 
   const dist = [5, 4, 3, 2, 1].map(star => ({
     star,
-    count: cw.reviews.filter(r => r.rating === star).length,
+    count: cw.reviews.filter((r: { rating: number }) => r.rating === star).length,
   }))
   const total = cw.reviews.length
 

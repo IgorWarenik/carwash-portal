@@ -3,14 +3,14 @@
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useCallback, useTransition } from 'react'
 
-export function CitySearchInput({ defaultValue, citySlug }: { defaultValue?: string; citySlug: string }) {
+export function CitySearchInput({ defaultValue }: { defaultValue?: string; citySlug: string }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [, startTransition] = useTransition()
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(searchParams?.toString() ?? '')
     const val = e.target.value.trim()
     if (val) {
       params.set('q', val)

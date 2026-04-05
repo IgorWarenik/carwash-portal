@@ -38,9 +38,10 @@ export default async function ReviewsPage({ params }: Props) {
 
   if (!data || data.city.slug !== params.city) notFound()
 
+  const reviews = data.reviews
   const dist = [5, 4, 3, 2, 1].map(star => ({
     star,
-    count: data.reviews.filter(r => r.rating === star).length,
+    count: reviews.filter((r: (typeof reviews)[number]) => r.rating === star).length,
   }))
   const total = data.reviews.length
 

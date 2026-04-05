@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
-        <Script id="ym-init" strategy="afterInteractive">{`
+        <Script id="ym-init" strategy="beforeInteractive">{`
           (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
             m[i].l=1*new Date();

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" rx="7" fill="#e94560"/>
+
+  <!-- Water drops -->
+  <ellipse cx="10" cy="7" rx="1.3" ry="1.8" fill="white" opacity="0.85"/>
+  <ellipse cx="16" cy="5.5" rx="1.3" ry="1.8" fill="white" opacity="0.85"/>
+  <ellipse cx="22" cy="7" rx="1.3" ry="1.8" fill="white" opacity="0.85"/>
+
+  <!-- Car body (side view) -->
+  <rect x="4" y="17" width="24" height="7" rx="1.5" fill="white"/>
+
+  <!-- Cabin / roof -->
+  <path d="M9.5 17 L11.5 11.5 H20.5 L22.5 17 Z" fill="white"/>
+
+  <!-- Windows (cut out with background color) -->
+  <path d="M12 16.5 L13 13 H16 V16.5 Z" fill="#e94560" opacity="0.6"/>
+  <path d="M17 13 H19.5 L20.5 16.5 H17 Z" fill="#e94560" opacity="0.6"/>
+
+  <!-- Wheels -->
+  <circle cx="9.5" cy="24" r="3" fill="#e94560"/>
+  <circle cx="9.5" cy="24" r="1.2" fill="white" opacity="0.4"/>
+  <circle cx="22.5" cy="24" r="3" fill="#e94560"/>
+  <circle cx="22.5" cy="24" r="1.2" fill="white" opacity="0.4"/>
+</svg>

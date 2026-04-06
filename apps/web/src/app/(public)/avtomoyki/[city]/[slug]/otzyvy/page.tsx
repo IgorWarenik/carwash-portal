@@ -43,8 +43,21 @@ export default async function ReviewsPage({ params }: Props) {
   const dist = [5, 4, 3, 2, 1].map(star => ({ star, count: ratingCounts[star] ?? 0 }))
   const total = data.reviews.length
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://www.businessmoyka.ru/' },
+      { '@type': 'ListItem', position: 2, name: 'Автомойки', item: 'https://www.businessmoyka.ru/avtomoyki' },
+      { '@type': 'ListItem', position: 3, name: data.city.name, item: `https://www.businessmoyka.ru/avtomoyki/${params.city}` },
+      { '@type': 'ListItem', position: 4, name: data.name, item: `https://www.businessmoyka.ru/avtomoyki/${params.city}/${params.slug}` },
+      { '@type': 'ListItem', position: 5, name: 'Отзывы', item: `https://www.businessmoyka.ru/avtomoyki/${params.city}/${params.slug}/otzyvy` },
+    ],
+  }
+
   return (
     <main className="max-w-3xl mx-auto px-4 py-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-2 flex-wrap">
         <Link href="/" className="hover:text-[#e94560]">Главная</Link>
         <span>›</span>

@@ -254,12 +254,15 @@ export default async function CarWashDetailPage({ params }: Props) {
 
   const typeLabel = TYPE_LABELS[cw.type] ?? 'Автомойка'
 
+  const canonicalUrl = `https://www.businessmoyka.ru/avtomoyki/${params.city}/${params.slug}`
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    '@id': `https://avtomoyki-portal.ru/avtomoyki/${params.city}/${params.slug}`,
+    '@id': canonicalUrl,
     name: cw.name,
     description: cw.description ?? undefined,
+    url: canonicalUrl,
     address: {
       '@type': 'PostalAddress',
       streetAddress: cw.address,
@@ -267,7 +270,6 @@ export default async function CarWashDetailPage({ params }: Props) {
       addressCountry: 'RU',
     },
     telephone: cw.phone ?? undefined,
-    url: cw.website ?? undefined,
     ...(cw.rating && cw.rating > 0 ? {
       aggregateRating: {
         '@type': 'AggregateRating',
@@ -276,7 +278,9 @@ export default async function CarWashDetailPage({ params }: Props) {
       },
     } : {}),
     openingHours: cw.isOpen24h ? 'Mo-Su 00:00-24:00' : cw.workingHours ?? undefined,
-    priceRange: cw.priceFrom ? `от ${cw.priceFrom} ₽` : undefined,
+    priceRange: cw.priceFrom
+      ? (cw.priceTo ? `${cw.priceFrom}–${cw.priceTo} ₽` : `от ${cw.priceFrom} ₽`)
+      : undefined,
     ...(cw.reviews.length > 0 ? {
       review: cw.reviews.slice(0, 3).map(r => ({
         '@type': 'Review',
@@ -288,9 +292,21 @@ export default async function CarWashDetailPage({ params }: Props) {
     } : {}),
   }
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://www.businessmoyka.ru/' },
+      { '@type': 'ListItem', position: 2, name: 'Автомойки', item: 'https://www.businessmoyka.ru/avtomoyki' },
+      { '@type': 'ListItem', position: 3, name: cw.city.name, item: `https://www.businessmoyka.ru/avtomoyki/${params.city}` },
+      { '@type': 'ListItem', position: 4, name: cw.name, item: canonicalUrl },
+    ],
+  }
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       {/* Breadcrumb */}
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-2 flex-wrap">

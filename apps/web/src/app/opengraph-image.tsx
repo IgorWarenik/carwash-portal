@@ -60,7 +60,7 @@ export default function OgImage() {
 
         {/* URL */}
         <div style={{ position: 'absolute', bottom: '40px', color: '#4b5563', fontSize: 18 }}>
-          avtomoyki-portal.ru
+          businessmoyka.ru
         </div>
       </div>
     ),

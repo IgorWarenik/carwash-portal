@@ -601,18 +601,40 @@ export default function BlogArticlePage({ params }: Props) {
 
   const related = getRelated(params.slug, article.category)
 
+  const articleUrl = `https://www.businessmoyka.ru/blog/${params.slug}`
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: article.title,
     description: article.excerpt,
+    url: articleUrl,
     datePublished: article.publishedAt,
-    author: { '@type': 'Organization', name: 'Портал Автомоек' },
+    dateModified: article.publishedAt,
+    author: { '@type': 'Organization', name: 'Портал Автомоек', url: 'https://www.businessmoyka.ru' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Портал Автомоек',
+      url: 'https://www.businessmoyka.ru',
+      logo: { '@type': 'ImageObject', url: 'https://www.businessmoyka.ru/icon.svg' },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+  }
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://www.businessmoyka.ru/' },
+      { '@type': 'ListItem', position: 2, name: 'Журнал', item: 'https://www.businessmoyka.ru/blog' },
+      { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
+    ],
   }
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-2">
         <Link href="/" className="hover:text-[#e94560]">Главная</Link>

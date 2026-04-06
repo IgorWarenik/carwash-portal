@@ -5,7 +5,7 @@ import { prisma } from '@carwash/db'
 
 interface Props { params: { city: string } }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 const TYPE_LABELS: Record<string, string> = {
   self_service: 'Самообслуживание',
@@ -109,9 +109,21 @@ export default async function CenyPage({ params }: Props) {
     })),
   }
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://www.businessmoyka.ru/' },
+      { '@type': 'ListItem', position: 2, name: 'Автомойки', item: 'https://www.businessmoyka.ru/avtomoyki' },
+      { '@type': 'ListItem', position: 3, name: city.name, item: `https://www.businessmoyka.ru/avtomoyki/${params.city}` },
+      { '@type': 'ListItem', position: 4, name: 'Цены', item: `https://www.businessmoyka.ru/avtomoyki/${params.city}/ceny` },
+    ],
+  }
+
   return (
     <main className="max-w-4xl mx-auto px-4 py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-2">
         <Link href="/" className="hover:text-[#e94560]">Главная</Link>

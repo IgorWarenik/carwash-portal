@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description:
     'Каталог автомоек России: найти, купить, продать, открыть автомойку. ' +
     'Поставщики оборудования, франшизы, калькуляторы окупаемости.',
-  robots: { index: true, follow: true },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   verification: { yandex: 'a40a7017bdc1929e' },
   openGraph: {
     type: 'website',

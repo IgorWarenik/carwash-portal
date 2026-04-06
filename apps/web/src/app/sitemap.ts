@@ -116,9 +116,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let cityBuyPages: MetadataRoute.Sitemap = []
   let cityPricePages: MetadataRoute.Sitemap = []
   let districtPages: MetadataRoute.Sitemap = []
+  let carwashPages: MetadataRoute.Sitemap = []
   try {
     const { prisma } = await import('@carwash/db')
     const cities = await prisma.city.findMany({ where: { isActive: true }, select: { slug: true } })
+
+    // Individual carwash pages
+    const carwashes = await prisma.carWash.findMany({
+      where: { status: 'active' },
+      select: { slug: true, updatedAt: true, city: { select: { slug: true } } },
+    })
+    carwashPages = carwashes.map(cw => ({
+      url: `${BASE_URL}/avtomoyki/${cw.city.slug}/${cw.slug}`,
+      lastModified: cw.updatedAt,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
 
     // District pages
     const districtRows = await prisma.carWash.findMany({
@@ -164,5 +177,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // DB unavailable during build — skip dynamic pages
   }
 
-  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...cityPricePages, ...districtPages]
+  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...cityPricePages, ...districtPages, ...carwashPages]
 }

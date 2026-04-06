@@ -66,9 +66,6 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
   const typeFilter = searchParams.type as 'self_service' | 'automatic' | 'manual' | 'detailing' | 'truck' | undefined
   const q = searchParams.q?.trim()
 
-  // Noindex for many filter combinations
-  const hasFilters = Object.keys(searchParams).length > 1
-
   const baseWhere = {
     cityId: city.id,
     status: 'active' as const,
@@ -133,7 +130,6 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
-      {hasFilters && <meta name="robots" content="noindex, follow" />}
 
       <script
         type="application/ld+json"

@@ -105,6 +105,46 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
 
   const totalPages = Math.ceil(total / perPage)
 
+  // FAQ data
+  const selfServiceBenchmark = benchmarks.find(b => b.carwashType === 'self_service')
+  const manualBenchmark = benchmarks.find(b => b.carwashType === 'manual')
+  const priceAnswer = selfServiceBenchmark || manualBenchmark
+    ? `В ${city.name} средний чек: ${selfServiceBenchmark ? `самообслуживание — ${Math.round(selfServiceBenchmark.value)} ₽` : ''}${selfServiceBenchmark && manualBenchmark ? ', ' : ''}${manualBenchmark ? `ручная мойка — ${Math.round(manualBenchmark.value)} ₽` : ''}. Цены зависят от класса автомобиля и набора услуг.`
+    : `В ${city.name} цены варьируются от 200 до 2000 ₽ в зависимости от типа мойки и класса автомобиля.`
+
+  const faqItems = [
+    {
+      q: `Сколько стоит помыть машину в ${city.name}?`,
+      a: priceAnswer,
+    },
+    {
+      q: `Где найти автомойку рядом в ${city.name}?`,
+      a: `Воспользуйтесь каталогом на этой странице — здесь собраны все автомойки ${city.name} с адресами и режимом работы. Используйте фильтры по типу или поиск по адресу.`,
+    },
+    {
+      q: 'Какой тип автомойки лучше выбрать?',
+      a: 'Самообслуживание — бюджетно и быстро (150–400 ₽). Ручная мойка — тщательная чистка (от 500 ₽). Автоматическая — скорость без участия мойщика. Детейлинг — глубокая полировка и защита кузова.',
+    },
+    {
+      q: `Работают ли автомойки в ${city.name} круглосуточно?`,
+      a: `Часть автомоек ${city.name} работает 24/7, особенно мойки самообслуживания. Режим работы каждой точки указан в карточке.`,
+    },
+    {
+      q: 'Как оставить отзыв об автомойке?',
+      a: 'Откройте карточку любой автомойки в каталоге и перейдите в раздел «Отзывы». Там можно поставить оценку и написать комментарий — это помогает другим автовладельцам сделать выбор.',
+    },
+  ]
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map(item => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  }
+
   // JSON-LD structured data
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -134,6 +174,10 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* Breadcrumb */}
@@ -314,6 +358,22 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
           ))}
         </div>
       )}
+
+      {/* FAQ */}
+      <section className="mt-16">
+        <h2 className="text-2xl font-bold mb-6">Частые вопросы</h2>
+        <div className="space-y-3">
+          {faqItems.map((item) => (
+            <details key={item.q} className="group bg-white border border-gray-200 rounded-xl overflow-hidden">
+              <summary className="flex items-center justify-between px-5 py-4 cursor-pointer font-medium text-gray-900 hover:text-[#e94560] transition-colors list-none">
+                {item.q}
+                <span className="ml-4 text-[#e94560] text-lg group-open:rotate-45 transition-transform inline-block">+</span>
+              </summary>
+              <p className="px-5 pb-4 text-sm text-gray-600 leading-relaxed">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
 
       {/* B2B CTA */}
       <div className="mt-16 bg-gray-50 rounded-2xl p-8 text-center">

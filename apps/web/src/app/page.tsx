@@ -17,11 +17,11 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Портал Автомоек',
-  url: 'https://avtomoyki-portal.ru',
+  url: 'https://www.businessmoyka.ru',
   description: 'Крупнейший портал автомоек России — каталог, покупка, продажа, открытие автомойки.',
   potentialAction: {
     '@type': 'SearchAction',
-    target: 'https://avtomoyki-portal.ru/avtomoyki?q={search_term_string}',
+    target: 'https://www.businessmoyka.ru/avtomoyki?q={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
 }
@@ -229,6 +229,30 @@ export default function HomePage() {
             <Link href="/franshizy" className="text-[#e94560] font-semibold hover:underline">
               Сравнить все франшизы →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Полезное */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold mb-8 text-center">Полезное для владельцев и покупателей</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { href: '/blog', label: 'Блог', sub: 'Как открыть и развить автомойку' },
+              { href: '/tools/roi-calculator', label: 'Калькулятор ROI', sub: 'Расчёт окупаемости' },
+              { href: '/otkryt-avtomoiku', label: 'Гайд по открытию', sub: 'Пошаговая инструкция' },
+              { href: '/avtomoyki/reyting', label: 'Рейтинг моек', sub: 'Лучшие по отзывам' },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="bg-white border border-gray-200 rounded-xl p-5 hover:border-[#e94560] hover:shadow-sm transition-all group"
+              >
+                <div className="font-semibold text-gray-900 group-hover:text-[#e94560] transition-colors">{item.label}</div>
+                <div className="text-sm text-gray-400 mt-1">{item.sub}</div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

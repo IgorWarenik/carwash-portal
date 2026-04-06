@@ -57,6 +57,17 @@ export default async function DistrictPage({ params }: Props) {
 
   if (carwashes.length === 0) notFound()
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://www.businessmoyka.ru/' },
+      { '@type': 'ListItem', position: 2, name: 'Автомойки', item: 'https://www.businessmoyka.ru/avtomoyki' },
+      { '@type': 'ListItem', position: 3, name: city.name, item: `https://www.businessmoyka.ru/avtomoyki/${params.city}` },
+      { '@type': 'ListItem', position: 4, name: `Район ${districtName}`, item: `https://www.businessmoyka.ru/avtomoyki/${params.city}/rayon/${params.district}` },
+    ],
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -77,6 +88,7 @@ export default async function DistrictPage({ params }: Props) {
   return (
     <main className="max-w-5xl mx-auto px-4 py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <nav className="text-sm text-gray-500 mb-6 flex items-center gap-2 flex-wrap">
         <Link href="/" className="hover:text-[#e94560]">Главная</Link>

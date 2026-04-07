@@ -387,6 +387,31 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
         </div>
       </section>
 
+      {/* Смотрите также — internal linking hub */}
+      <section className="mt-16">
+        <h2 className="text-xl font-bold mb-5">Смотрите также</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {[
+            { href: `/avtomoyki/${params.city}/rejting`,        label: 'Лучшие',          sub: 'По рейтингу',     icon: '🏆' },
+            { href: `/avtomoyki/${params.city}/deshevo`,        label: 'Дёшево',          sub: 'От дешёвых',      icon: '💰' },
+            { href: `/avtomoyki/${params.city}/kruglosutochno`, label: 'Круглосуточно',   sub: 'Работают 24/7',   icon: '🌙' },
+            { href: `/avtomoyki/${params.city}/ceny`,           label: 'Цены',            sub: 'Прайс-лист',      icon: '📋' },
+            { href: `/avtomoyki/${params.city}/samobsluzhivanie`, label: 'Самообслуж.',   sub: 'Без персонала',   icon: '🚿' },
+            { href: `/avtomoyki/${params.city}/deteyling`,      label: 'Детейлинг',       sub: 'Химчистка, полировка', icon: '✨' },
+          ].map(item => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-[#e94560] hover:shadow-sm transition-all group"
+            >
+              <div className="text-2xl mb-1">{item.icon}</div>
+              <div className="font-semibold text-sm text-gray-900 group-hover:text-[#e94560] transition-colors">{item.label}</div>
+              <div className="text-xs text-gray-400 mt-0.5">{item.sub}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* B2B CTA */}
       <div className="mt-16 bg-gray-50 rounded-2xl p-8 text-center">
         <h2 className="text-xl font-bold mb-3">Хотите открыть автомойку в {city.name}?</h2>

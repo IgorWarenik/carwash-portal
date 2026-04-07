@@ -231,6 +231,10 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
           Рейтинг лучших →
         </Link>
         <span className="text-gray-300">|</span>
+        <Link href={`/avtomoyki/${params.city}/deshevo`} className="text-gray-500 hover:text-[#e94560] transition-colors">
+          Дёшево →
+        </Link>
+        <span className="text-gray-300">|</span>
         <Link href={`/avtomoyki/${params.city}/kruglosutochno`} className="text-gray-500 hover:text-[#e94560] transition-colors">
           Круглосуточные →
         </Link>

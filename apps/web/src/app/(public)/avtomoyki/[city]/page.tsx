@@ -397,7 +397,7 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
             { href: `/avtomoyki/${params.city}/kruglosutochno`, label: 'Круглосуточно',   sub: 'Работают 24/7',   icon: '🌙' },
             { href: `/avtomoyki/${params.city}/otzyvy`,         label: 'Отзывы',          sub: 'Мнения клиентов', icon: '💬' },
             { href: `/avtomoyki/${params.city}/ceny`,           label: 'Цены',            sub: 'Прайс-лист',      icon: '📋' },
-            { href: `/avtomoyki/${params.city}/samobsluzhivanie`, label: 'Самообслуж.',   sub: 'Без персонала',   icon: '🚿' },
+            { href: `/avtomoyki/${params.city}/himchistka-salona`, label: 'Химчистка',      sub: 'Детейлинг салона', icon: '🧽' },
           ].map(item => (
             <Link
               key={item.href}

@@ -126,6 +126,21 @@ export default async function KruglosutochnoPage({ params }: Props) {
         {carwashes.length} {carwashes.length % 10 === 1 && carwashes.length % 100 !== 11 ? 'мойка' : 'моек'} — работают 24 часа, 7 дней в неделю
       </p>
 
+      {/* By type */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        {[
+          { slug: 'samobsluzhivanie-kruglosutochno', label: 'Самообслуживание 24/7' },
+          { slug: 'ruchnaya-kruglosutochno',         label: 'Ручная 24/7' },
+          { slug: 'avtomaticheskaya-kruglosutochno', label: 'Автоматическая 24/7' },
+          { slug: 'deteyling-kruglosutochno',        label: 'Детейлинг 24/7' },
+        ].map(t => (
+          <Link key={t.slug} href={`/avtomoyki/${params.city}/${t.slug}`}
+            className="px-4 py-2 bg-gray-100 text-gray-600 hover:bg-[#e94560] hover:text-white rounded-full text-sm font-medium transition-colors">
+            {t.label}
+          </Link>
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {carwashes.map(cw => (
           <Link

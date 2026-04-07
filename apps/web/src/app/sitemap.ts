@@ -115,6 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let cityTypePages: MetadataRoute.Sitemap = []
   let cityBuyPages: MetadataRoute.Sitemap = []
   let cityPricePages: MetadataRoute.Sitemap = []
+  let city24hPages: MetadataRoute.Sitemap = []
   let districtPages: MetadataRoute.Sitemap = []
   let carwashPages: MetadataRoute.Sitemap = []
   try {
@@ -173,9 +174,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }))
+    // Check which cities have 24h carwashes
+    const cities24h = await prisma.carWash.findMany({
+      where: { status: 'active', isOpen24h: true },
+      select: { city: { select: { slug: true } } },
+      distinct: ['cityId'],
+    })
+    city24hPages = cities24h.map(r => ({
+      url: `${BASE_URL}/avtomoyki/${r.city.slug}/kruglosutochno`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
   } catch {
     // DB unavailable during build — skip dynamic pages
   }
 
-  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...cityPricePages, ...districtPages, ...carwashPages]
+  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...cityPricePages, ...city24hPages, ...districtPages, ...carwashPages]
 }

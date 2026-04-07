@@ -227,6 +227,10 @@ export default async function CityCarwashesPage({ params, searchParams }: Props)
           Цены на мойку в {city.name} →
         </Link>
         <span className="text-gray-300">|</span>
+        <Link href={`/avtomoyki/${params.city}/kruglosutochno`} className="text-gray-500 hover:text-[#e94560] transition-colors">
+          Круглосуточные →
+        </Link>
+        <span className="text-gray-300">|</span>
         <Link href="/avtomoyki/reyting" className="text-gray-500 hover:text-[#e94560] transition-colors">
           Рейтинг лучших →
         </Link>

@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   transpilePackages: ['@carwash/ui', '@carwash/seo'],
   images: {
     formats: ['image/avif', 'image/webp'],

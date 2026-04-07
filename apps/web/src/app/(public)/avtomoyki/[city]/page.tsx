@@ -25,7 +25,7 @@ const TYPE_FILTERS = [
   { value: 'detailing', label: 'Детейлинг' },
 ]
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export async function generateStaticParams() {
   try {

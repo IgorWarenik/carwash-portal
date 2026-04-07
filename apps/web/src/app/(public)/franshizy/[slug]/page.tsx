@@ -89,7 +89,7 @@ function formatRub(n: number) {
   return `${Math.round(n / 1000)} тыс. ₽`
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export async function generateStaticParams() {
   try {

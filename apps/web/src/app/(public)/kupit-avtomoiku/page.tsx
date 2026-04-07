@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { prisma } from '@carwash/db'
 import { LeadFormBuy } from '@/components/LeadFormBuy'
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Купить автомойку — объявления о продаже готового бизнеса',

@@ -42,14 +42,14 @@ export default async function CityReviewsPage({ params, searchParams }: Props) {
   const [reviews, totalReviews, topByRating, stats] = await Promise.all([
     // Latest reviews across all carwashes in city
     prisma.review.findMany({
-      where: { carWash: { cityId: city.id, status: 'active' }, status: 'published' },
+      where: { carwash: { cityId: city.id, status: 'active' }, publishedAt: { not: null } },
       orderBy: { publishedAt: 'desc' },
       skip: (page - 1) * perPage,
       take: perPage,
-      include: { carWash: { select: { name: true, slug: true, type: true } } },
+      include: { carwash: { select: { name: true, slug: true, type: true } } },
     }),
     prisma.review.count({
-      where: { carWash: { cityId: city.id, status: 'active' }, status: 'published' },
+      where: { carwash: { cityId: city.id, status: 'active' }, publishedAt: { not: null } },
     }),
     // Top 5 carwashes by rating in city
     prisma.carWash.findMany({
@@ -61,7 +61,7 @@ export default async function CityReviewsPage({ params, searchParams }: Props) {
     // Rating distribution
     prisma.review.groupBy({
       by: ['rating'],
-      where: { carWash: { cityId: city.id, status: 'active' }, status: 'published' },
+      where: { carwash: { cityId: city.id, status: 'active' }, publishedAt: { not: null } },
       _count: true,
       orderBy: { rating: 'desc' },
     }),
@@ -135,12 +135,12 @@ export default async function CityReviewsPage({ params, searchParams }: Props) {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <Link
-                    href={`/avtomoyki/${params.city}/${rev.carWash.slug}`}
+                    href={`/avtomoyki/${params.city}/${rev.carwash.slug}`}
                     className="font-semibold text-sm hover:text-[#e94560] transition-colors"
                   >
-                    {rev.carWash.name}
+                    {rev.carwash.name}
                   </Link>
-                  <span className="text-xs text-gray-400 ml-2">{TYPE_LABELS[rev.carWash.type] ?? rev.carWash.type}</span>
+                  <span className="text-xs text-gray-400 ml-2">{TYPE_LABELS[rev.carwash.type] ?? rev.carwash.type}</span>
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
                   {[1,2,3,4,5].map(s => (

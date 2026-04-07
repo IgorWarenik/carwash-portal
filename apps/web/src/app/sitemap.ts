@@ -113,6 +113,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic city pages from DB
   let cityPages: MetadataRoute.Sitemap = []
   let cityTypePages: MetadataRoute.Sitemap = []
+  let citySellPages: MetadataRoute.Sitemap = []
   let cityBuyPages: MetadataRoute.Sitemap = []
   let cityOpenPages: MetadataRoute.Sitemap = []
   let cityPricePages: MetadataRoute.Sitemap = []
@@ -173,6 +174,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}/kupit-avtomoiku/${c.slug}`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
+      priority: 0.9,
+    }))
+    citySellPages = cities.map(c => ({
+      url: `${BASE_URL}/prodaty-avtomoiku/${c.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
       priority: 0.9,
     }))
     cityOpenPages = cities.map(c => ({
@@ -242,5 +249,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // DB unavailable during build — skip dynamic pages
   }
 
-  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...cityOpenPages, ...cityPricePages, ...cityBeskontaktPages, ...cityHimchistkaPages, ...cityReviewPages, ...cityRatingPages, ...cityBudgetPages, ...city24hPages, ...cityType24hPages, ...districtPages, ...carwashPages]
+  return [...staticPages, ...blogPages, ...toolPages, ...franchisePages, ...cityPages, ...cityTypePages, ...cityBuyPages, ...citySellPages, ...cityOpenPages, ...cityPricePages, ...cityBeskontaktPages, ...cityHimchistkaPages, ...cityReviewPages, ...cityRatingPages, ...cityBudgetPages, ...city24hPages, ...cityType24hPages, ...districtPages, ...carwashPages]
 }

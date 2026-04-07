@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { prisma } from '@carwash/db'
 import { RoiCalculatorClient } from './RoiCalculatorClient'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Калькулятор окупаемости автомойки — ROI за 2 минуты',

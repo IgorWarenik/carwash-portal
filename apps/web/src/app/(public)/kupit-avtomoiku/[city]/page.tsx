@@ -6,7 +6,7 @@ import { LeadFormBuy } from '@/components/LeadFormBuy'
 
 interface Props { params: { city: string } }
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 const TYPE_LABELS: Record<string, string> = {
   self_service: 'Самообслуживание',
